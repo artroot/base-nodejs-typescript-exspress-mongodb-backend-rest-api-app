@@ -1,0 +1,23 @@
+export const db = {
+    mongo: {
+        host: '127.0.0.1',
+        db: '',
+        port: 27017,
+        user: '',
+        password: ''
+    }
+}
+
+export const app = {
+    secret: 'CBI9K1HUXSP839Z8TOVKIKOM18Z6Q6RS50FTPII8',
+    default_user: {
+        first_name: 'Root',
+        email: 'root@example.com',
+        password: 'root'
+    }
+}
+
+export const server = {
+    'port': '4000'
+}
+

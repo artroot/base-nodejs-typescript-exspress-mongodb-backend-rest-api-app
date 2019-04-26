@@ -1,0 +1,767 @@
+swagger: '2.0'
+info:
+  description: ''
+  version: 1.1.0
+  title: Example App
+  contact:
+    email: a.semenishch@gmail.com
+host: localhost/api/v1/
+tags:
+- name: Auth
+  description: Base authorization
+- name: User
+  description: Everything about Users
+- name: Group
+  description: Everything about Groups
+
+schemes:
+- http
+- https
+securityDefinitions:
+  sid:
+    type: apiKey
+    in: header
+    name: X-API-SID
+    description: 'User {SID}'
+  token:
+    type: apiKey
+    in: header
+    name: X-API-TOKEN
+    description: 'User {token}'
+paths:
+  '/auth/login':
+    post:
+      tags:
+      - Auth
+      summary: Authorize by email and password
+      description: ''
+      operationId: ''
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: User email and password
+        required: true
+        schema:
+          $ref: '#/components/schemas/auth-login'
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+                example: true
+              result:
+                $ref: '#/components/schemas/full-user'
+              error:
+                type: boolean
+                example: false
+        '400':
+          $ref: '#/examples/ValidationError'
+        '403':
+          $ref: '#/examples/AccessError'
+        '500':
+          $ref: '#/examples/OtherError'
+  /auth/check:
+    get:
+      tags:
+      - Auth
+      summary: Check authorize by token
+      description: ''
+      operationId: ''
+      produces:
+      - application/json
+      security:
+      - sid: []
+      - token: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+                example: true
+              result:
+                $ref: '#/components/schemas/less-user-res'
+              error:
+                type: boolean
+                example: false
+        '400':
+          $ref: '#/examples/ValidationError'
+        '403':
+          $ref: '#/examples/AccessError'
+        '500':
+          $ref: '#/examples/OtherError'
+  /auth/logout:
+    get:
+      tags:
+      - Auth
+      summary: Sign out
+      description: 'clear the auth token'
+      operationId: ''
+      produces:
+      - application/json
+      security:
+      - sid: []
+      - token: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+                example: true
+              result:
+                type: boolean
+                example: true
+              error:
+                type: boolean
+                example: false
+        '400':
+          $ref: '#/examples/ValidationError'
+        '403':
+          $ref: '#/examples/AccessError'
+        '500':
+          $ref: '#/examples/OtherError'
+  /users:
+    get:
+      tags:
+      - User
+      summary: Get all users
+      description: ''
+      operationId: ''
+      produces:
+      - application/json
+      security:
+      - sid: []
+      - token: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+                example: true
+              result:
+                type: array
+                items:
+                  $ref: '#/components/schemas/less-user-res'
+              error:
+                type: boolean
+                example: false
+        '400':
+          $ref: '#/examples/ValidationError'
+        '500':
+          $ref: '#/examples/OtherError'
+  '/user/{_id}':
+    get:
+      tags:
+      - User
+      summary: Find user by ID
+      description: Returns a single user
+      produces:
+      - application/json
+      security:
+      - sid: []
+      - token: []
+      parameters:
+      - name: _id
+        in: path
+        description: user ID
+        required: true
+        type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+                example: true
+              result:
+                $ref: '#/components/schemas/less-user-res'
+              error:
+                type: boolean
+                example: false
+        '400':
+          $ref: '#/examples/ValidationError'
+        '403':
+          $ref: '#/examples/AccessError'
+        '404':
+          $ref: '#/examples/NotFoundError'
+        '500':
+          $ref: '#/examples/OtherError'
+    put:
+      tags:
+      - User
+      summary: Update user by ID
+      description: ''
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      security:
+      - sid: []
+      - token: []
+      parameters:
+      - name: _id
+        in: path
+        description: user ID
+        required: true
+        type: string
+      - in: body
+        name: body
+        description: User object that needs to be update in the store
+        required: true
+        schema:
+          $ref: '#/components/schemas/less-user-req'
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+                example: true
+              result:
+                $ref: '#/components/schemas/less-user-res'
+              error:
+                type: boolean
+                example: false
+        '400':
+          $ref: '#/examples/ValidationError'
+        '403':
+          $ref: '#/examples/AccessError'
+        '404':
+          $ref: '#/examples/NotFoundError'
+        '500':
+          $ref: '#/examples/OtherError'
+    delete:
+      tags:
+      - User
+      summary: Delete user by ID
+      description: ''
+      produces:
+      - application/json
+      security:
+      - sid: []
+      - token: []
+      parameters:
+      - name: _id
+        in: path
+        description: user ID
+        required: true
+        type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+                example: true
+              result:
+                type: boolean
+                example: true
+              error:
+                type: boolean
+                example: false
+        '400':
+          $ref: '#/examples/ValidationError'
+        '403':
+          $ref: '#/examples/AccessError'
+        '404':
+          $ref: '#/examples/NotFoundError'
+        '500':
+          $ref: '#/examples/OtherError'
+  /user:
+    post:
+      tags:
+      - User
+      summary: Add a new user to the store
+      description: ''
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      security:
+      - sid: []
+      - token: []
+      parameters:
+      - in: body
+        name: body
+        description: User object that needs to be added to the store
+        required: true
+        schema:
+          $ref: '#/components/schemas/less-user-req'
+      responses:
+        '201':
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+                example: true
+              result:
+                $ref: '#/components/schemas/less-user-res'
+              error:
+                type: boolean
+                example: false
+        '400':
+          $ref: '#/examples/ValidationError'
+        '403':
+          $ref: '#/examples/AccessError'
+        '500':
+          $ref: '#/examples/OtherError'
+  /groups:
+    get:
+      tags:
+      - Group
+      summary: Get all groups
+      description: ''
+      operationId: ''
+      produces:
+      - application/json
+      security:
+      - sid: []
+      - token: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+                example: true
+              result:
+                type: array
+                items:
+                  $ref: '#/components/schemas/group'
+              error:
+                type: boolean
+                example: false
+
+        '400':
+          $ref: '#/examples/ValidationError'
+        '500':
+          $ref: '#/examples/OtherError'
+  '/group/{_id}':
+    get:
+      tags:
+      - Group
+      summary: Find group by ID
+      description: Returns a single group
+      produces:
+      - application/json
+      security:
+      - sid: []
+      - token: []
+      parameters:
+      - name: _id
+        in: path
+        description: ID of group to return
+        required: true
+        type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+                example: true
+              result:
+                $ref: '#/components/schemas/group'
+              error:
+                type: boolean
+                example: false
+        '400':
+          $ref: '#/examples/ValidationError'
+        '403':
+          $ref: '#/examples/AccessError'
+        '500':
+          $ref: '#/examples/OtherError'
+    put:
+      tags:
+      - Group
+      summary: Update group by ID
+      description: ''
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      security:
+      - sid: []
+      - token: []
+      parameters:
+      - name: _id
+        in: path
+        description: group ID
+        required: true
+        type: string
+      - in: body
+        name: body
+        description: Group object that needs to be update in the store
+        required: true
+        schema:
+          $ref: '#/components/schemas/group'
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+                example: true
+              result:
+                $ref: '#/components/schemas/group'
+              error:
+                type: boolean
+                example: false
+        '400':
+          $ref: '#/examples/ValidationError'
+        '403':
+          $ref: '#/examples/AccessError'
+        '404':
+          $ref: '#/examples/NotFoundError'
+        '500':
+          $ref: '#/examples/OtherError'
+    delete:
+      tags:
+      - Group
+      summary: Delete group by ID
+      description: ''
+      produces:
+      - application/json
+      security:
+      - sid: []
+      - token: []
+      parameters:
+      - name: _id
+        in: path
+        description: group ID
+        required: true
+        type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+                example: true
+              result:
+                type: boolean
+                example: true
+              error:
+                type: boolean
+                example: false
+        '400':
+          $ref: '#/examples/ValidationError'
+        '403':
+          $ref: '#/examples/AccessError'
+        '404':
+          $ref: '#/examples/NotFoundError'
+        '500':
+          $ref: '#/examples/OtherError'
+  /group:
+    post:
+      tags:
+      - Group
+      summary: Add a new group to the store
+      description: ''
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      security:
+      - sid: []
+      - token: []
+      parameters:
+      - in: body
+        name: body
+        description: Group object that needs to be added to the store
+        required: true
+        schema:
+          $ref: '#/components/schemas/group'
+      responses:
+        '201':
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+                example: true
+              result:
+                $ref: '#/components/schemas/group'
+              error:
+                type: boolean
+                example: false
+        '400':
+          $ref: '#/examples/ValidationError'
+        '403':
+          $ref: '#/examples/AccessError'
+        '500':
+          $ref: '#/examples/OtherError'
+
+
+components:
+  responses:
+    Error:
+      example:
+        type: object
+        properties:
+          type:
+            type: string
+            description: Error type
+          message:
+            type: string
+            description: Error message
+  securitySchemes:
+    publicKey:
+      type: apiKey
+      in: header
+      name: X-API-PUBLIC-KEY
+      description: 'Admin {public_key}'
+    userId:
+      type: apiKey
+      in: header
+      name: X-API-USER-ID
+      description: 'Admin {user_id}'
+  auth_req_parameters:
+    user_id:
+      name: auth-user_id
+      in: header
+      description: 'Admin {user_id}'
+      required: true
+      type: string
+    public_key:
+      name: auth-public_key
+      in: header
+      description: 'Admin {public_key}'
+      required: true
+      type: string
+  schemas:
+    auth-login:
+      type: object
+      required:
+      - email
+      - password
+      properties:
+        email:
+          type: string
+          uniqueItems: true
+          pattern: /\S+@\S+\.\S+/
+        password:
+          type: string
+    full-user:
+      type: object
+      required:
+      - email
+      properties:
+        _id:
+          type: string
+        sid:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+          uniqueItems: true
+          pattern: /\S+@\S+\.\S+/
+        group:
+          $ref: '#/components/schemas/group'
+        token:
+          type: string
+          description: Hidden parameter
+    less-user-req:
+      type: object
+      required:
+      - email
+      properties:
+        _id:
+          type: string
+        sid:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+          uniqueItems: true
+          pattern: /\S+@\S+\.\S+/
+        group:
+          type: string
+          description: Group _id
+    less-user-res:
+      type: object
+      required:
+      - email
+      properties:
+        _id:
+          type: string
+        sid:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+          uniqueItems: true
+          pattern: /\S+@\S+\.\S+/
+        group:
+          $ref: '#/components/schemas/group'
+    group:
+      type: object
+      required:
+      - name
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+          uniqueItems: true
+          pattern: '/^[а-яёіїА-ЯЁІЇ\d\w\s-,]*$/'
+        access:
+          type: object
+          properties:
+            system:
+              type: object
+              properties:
+                name:
+                  type: string
+                  default: "Main"
+                fields:
+                  type: object
+                  properties:
+                    users:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          default: "Users"
+                        value:
+                          type: string
+                          default: 'no'
+                          enum:
+                          - 'no'
+                          - r
+                          - rw
+                    groups:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          default: "Groups"
+                        value:
+                          type: string
+                          default: 'no'
+                          enum:
+                          - 'no'
+                          - r
+                          - rw
+
+
+
+
+examples:
+  ValidationError:
+    description: Validation Error
+    schema:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: false
+        result:
+          type: boolean
+          example: false
+        error:
+          example:
+          - type: 'ValidationError'
+            message: 'error message'
+          schema:
+            $ref: '#/components/responses/Error'
+  NotFoundError:
+    description: NotFound Error
+    schema:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: false
+        result:
+          type: boolean
+          example: false
+        error:
+          example:
+          - type: 'NotFoundError'
+            message: 'error message'
+          schema:
+            $ref: '#/components/responses/Error'
+  AccessError:
+    description: Access Error
+    schema:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: false
+        result:
+          type: boolean
+          example: false
+        error:
+          example:
+          - type: 'AccessError'
+            message: 'error message'
+          schema:
+            $ref: '#/components/responses/Error'
+  OtherError:
+    description: Other Error
+    schema:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: false
+        result:
+          type: boolean
+          example: false
+        error:
+          example:
+          - type: 'ErrorType'
+            message: 'error message'
+          schema:
+            $ref: '#/components/responses/Error'
+
+externalDocs:
+  description: Find out more about Swagger
+  url: 'http://swagger.io'

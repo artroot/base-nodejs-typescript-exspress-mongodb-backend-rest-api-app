@@ -1,0 +1,36 @@
+{
+  "name": "base-nodejs-typescript-exspress-mongodb-backend-rest-api-app",
+  "version": "1.1.0",
+  "description": "Flexible and expandable base backend REST API application structure with authorize by email/password and login by token; Using nodejs, typescript, express, mongodb, migrations, mocha, chai, swagger;",
+  "main": "dist/server.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --reporter spec --exit --require ts-node/register 'test/**/*.test.ts'",
+    "build": "tsc",
+    "start": "node ./dist/server.js",
+    "prod": "npm run build && npm run start",
+    "dev": "nodemon ./dist/server.js"
+  },
+  "author": "Artem Semenishch <a.semenishch@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^10.12.18",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "migrate-mongoose": "^3.2.2",
+    "mongodb": "^3.1.10",
+    "mongoose": "^5.4.4",
+    "request": "^2.88.0",
+    "typescript": "^3.2.2"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/chai-http": "^3.0.5",
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.1",
+    "debug": "^4.1.1",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.9",
+    "ts-node": "^8.0.2"
+  }
+}

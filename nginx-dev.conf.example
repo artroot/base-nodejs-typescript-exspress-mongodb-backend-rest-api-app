@@ -1,0 +1,30 @@
+server {
+
+        listen 80;
+        listen 443 ssl;
+
+        server_name  ${server_name};
+
+        charset utf8;
+        
+        location /resources {
+		    alias ${work_dir}/swagger.json;
+	    }
+
+	    location /swagger-ui {
+	        index index.html;
+		    alias ${work_dir}/swagger-ui/;
+	    }
+
+	    location / {
+            proxy_pass http://127.0.0.1:${proxy_pass_port}/;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_pass_request_headers on;
+            proxy_cache_bypass $http_upgrade;
+        }
+
+
+}
