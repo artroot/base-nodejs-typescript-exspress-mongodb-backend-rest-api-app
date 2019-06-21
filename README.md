@@ -13,7 +13,7 @@ Flexible and expandable base backend REST API application structure with authori
 
 - nodeJS
 - typescript
-- exspress
+- express
 - mongoDB
 - migrations
 - mocha/chai
